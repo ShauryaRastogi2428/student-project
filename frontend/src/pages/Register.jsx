@@ -1,44 +1,41 @@
 import { useState } from "react";
-import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import API from "../api/api";
 
-export default function Register() {
-  const [form, setForm] = useState({});
-  const navigate = useNavigate();
+export default function Register({ setToken }) {
 
-  const handleRegister = async () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const register = async () => {
     try {
-      await API.post("/register", form);
-      alert("Registered Successfully");
-      navigate("/");
+      const res = await API.post("/auth/register", {
+        name,
+        email,
+        password
+      });
+
+      alert("Registered Successfully ✅");
+
+      // auto login after register
+      setToken(res.data.token);
+
     } catch (err) {
-      alert(err.response?.data?.msg || "Error");
+      alert("Register Failed ❌");
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Register</h2>
+    <div className="container">
+      <div className="card">
+        <h2>Register</h2>
 
-      <input className="form-control my-2" placeholder="Name"
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-      />
+        <input placeholder="Name" onChange={(e)=>setName(e.target.value)} />
+        <input placeholder="Email" onChange={(e)=>setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
 
-      <input className="form-control my-2" placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
-
-      <input className="form-control my-2" type="password" placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
-
-      <input className="form-control my-2" placeholder="Course"
-        onChange={(e) => setForm({ ...form, course: e.target.value })}
-      />
-
-      <button className="btn btn-success" onClick={handleRegister}>
-        Register
-      </button>
+        <button onClick={register}>Register</button>
+      </div>
     </div>
   );
 }

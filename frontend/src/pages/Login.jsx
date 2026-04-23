@@ -1,48 +1,60 @@
 import { useState } from "react";
-import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import API from "../api/api";
 
-export default function Login() {
-  const [form, setForm] = useState({});
-  const navigate = useNavigate();
+export default function Login({ setToken }) {
 
-  const handleLogin = async () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const login = async () => {
+    setLoading(true);
+
     try {
-      const res = await API.post("/login", form);
+      const res = await API.post("/auth/login", {
+        email,
+        password
+      });
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // check token safely
+      if (res.data && res.data.token) {
+        setToken(res.data.token);
+        localStorage.setItem("token", res.data.token);
+        alert("Login Successful ✅");
+      } else {
+        alert(res.data?.msg || "Login Failed ❌");
+      }
 
-      navigate("/dashboard");
     } catch (err) {
-      alert(err.response?.data?.msg || "Login Failed");
+      console.log(err);
+      alert(err.response?.data?.msg || "Login Failed ❌");
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Login</h2>
+    <div className="container">
+      <div className="card">
+        <h2>Login</h2>
 
-      <input
-        className="form-control my-2"
-        placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
+        <input
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        className="form-control my-2"
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button className="btn btn-primary" onClick={handleLogin}>
-        Login
-      </button>
-
-      <p className="mt-3">
-        New user? <a href="/register">Register</a>
-      </p>
+        <button onClick={login} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </div>
     </div>
   );
 }

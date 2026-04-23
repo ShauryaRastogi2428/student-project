@@ -1,99 +1,55 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const Student = require("../models/Student");
-const auth = require("../middleware/auth");
-
-// ================= REGISTER =================
+// REGISTER
 router.post("/register", async (req, res) => {
-  const { name, email, password, course } = req.body;
-
   try {
-    console.log("REGISTER BODY:", req.body);
+    const { name, email, password } = req.body;
 
-    let user = await Student.findOne({ email });
-    if (user) return res.status(400).json({ msg: "Email already exists" });
+    const exist = await User.findOne({ email });
+    if (exist) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
 
     const hashed = await bcrypt.hash(password, 10);
 
-    user = new Student({
-      name,
-      email,
-      password: hashed,
-      course
-    });
+    const user = new User({ name, email, password: hashed });
 
     await user.save();
 
-    res.json({ msg: "Registered successfully 🚀" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
+    res.json({ token });
 
   } catch (err) {
-    console.log("REGISTER ERROR:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ msg: "Server error" });
   }
 });
 
-// ================= LOGIN =================
+// LOGIN
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const user = await Student.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+    const { email, password } = req.body;
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "User not found" });
+    }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return res.status(400).json({ msg: "Wrong password" });
+    }
 
-    res.json({ token, user });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
+    res.json({ token });
 
   } catch (err) {
-    console.log("LOGIN ERROR:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ================= UPDATE PASSWORD =================
-router.put("/update-password", auth, async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-
-  try {
-    const user = await Student.findById(req.user);
-
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Wrong old password" });
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    await user.save();
-
-    res.json({ msg: "Password updated 🚀" });
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ================= UPDATE COURSE =================
-router.put("/update-course", auth, async (req, res) => {
-  const { course } = req.body;
-
-  try {
-    const user = await Student.findById(req.user);
-
-    user.course = course;
-    await user.save();
-
-    res.json({ msg: "Course updated 🚀" });
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ msg: "Server error" });
   }
 });
 

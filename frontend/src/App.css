@@ -1,127 +1,88 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Roboto, sans-serif;
-}
-
 body {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  min-height: 100vh;
-  color: #fff;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
 }
 
-/* Container */
+/* MAIN CONTAINER */
 .container {
-  max-width: 450px;
-  margin: 80px auto;
-  padding: 30px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
 }
 
-/* Heading */
-h2, h4 {
+/* HEADER */
+h1, h2, h3 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #ffffff;
-  font-weight: 600;
+  margin-bottom: 15px;
 }
 
-/* Inputs */
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 10px;
-  outline: none;
+/* CARD DESIGN */
+.card {
   background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
   transition: 0.3s;
 }
 
-input:focus {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.02);
+.card:hover {
+  transform: translateY(-3px);
 }
 
-/* Buttons */
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+/* INPUT FIELDS */
+input, select {
+  width: 95%;
+  padding: 10px;
+  margin: 8px 0;
   border: none;
-  border-radius: 10px;
-  font-weight: bold;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+/* BUTTONS */
+button {
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border: none;
+  padding: 10px 15px;
+  color: white;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s ease;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: 0.3s;
 }
 
-/* Primary */
-.btn-primary {
-  background: linear-gradient(90deg, #4f46e5, #3b82f6);
-  color: white;
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+/* GRIEVANCE ITEM */
+.item {
+  border-left: 4px solid #00c6ff;
+  padding: 10px;
+  margin: 10px 0;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
 }
 
-/* Success */
-.btn-success {
-  background: linear-gradient(90deg, #10b981, #22c55e);
-  color: white;
+/* DELETE BUTTON */
+.delete-btn {
+  background: #ff4b5c;
+  margin-left: 10px;
 }
 
-.btn-warning {
-  background: linear-gradient(90deg, #f59e0b, #f97316);
-  color: white;
-}
-
-.btn-danger {
-  background: linear-gradient(90deg, #ef4444, #dc2626);
-  color: white;
-}
-
-.btn-dark {
-  background: #111827;
-  color: white;
-}
-
-/* Card */
-.card {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+/* LOGIN BOX */
+.login-box {
+  width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 15px;
   backdrop-filter: blur(10px);
-}
-
-/* Links */
-a {
-  color: #60a5fa;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* HR */
-hr {
-  border: 0;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 20px 0;
-}
-
-/* Dashboard spacing */
-.dashboard {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 30px;
 }
